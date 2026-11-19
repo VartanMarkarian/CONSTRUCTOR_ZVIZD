@@ -805,3 +805,11 @@ html:not([data-theme="dark"]) .contacts .seo-links{border-top-color:rgba(238,235
 .proj-more a:hover{color:var(--accent)}
 .proj-foot{flex-direction:column;align-items:flex-start;gap:6px;color:var(--ink2);padding-top:30px;border-top:1px solid var(--line)}
 @media (max-width:620px){.proj-more ul{grid-template-columns:1fr}.proj-back{padding:8px 12px;font-size:12.5px}}
+
+/* v24 — перемикач мови */
+.lang{cursor:pointer;transition:border-color .2s,background .2s}
+.lang:hover{border-color:var(--accent)}
+.lang span{opacity:.45;transition:opacity .2s,color .2s}
+.lang span.on{opacity:1;color:var(--accent)}
+html[lang="en"] .dir-en{display:none}
+@media (max-width:900px){.lang{display:inline-flex}}

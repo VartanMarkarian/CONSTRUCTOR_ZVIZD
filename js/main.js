@@ -6,6 +6,14 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const root = document.documentElement;
 const isDark = () => root.getAttribute('data-theme') === 'dark';
 
+/* ---------- МОВА: українська (основна) / англійська ---------- */
+const EN = window.KOM_EN || {};
+let LANG = (() => { try { return localStorage.getItem('kom-lang') === 'en' ? 'en' : 'uk'; } catch (e) { return 'uk'; } })();
+const isEn = () => LANG === 'en';
+const tr = s => (isEn() && EN[s]) ? EN[s] : s;
+const fixEn = h => h.split(' — фото ').join(' — photo ').split(' — відтворити відео').join(' — play video').split('Дивитися на YouTube ↗').join('Watch on YouTube ↗');
+const L = (p, k) => (isEn() && p.en && p.en[k] !== undefined) ? (k === 'body' ? fixEn(p.en[k]) : p.en[k]) : p[k];
+
 /* ---------- NAV ---------- */
 const nav = $('#nav'), burger = $('#burger'), links = $('#navLinks');
 addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30), { passive: true });
@@ -38,7 +46,7 @@ function initNet() {
   nodes = Array.from({ length: n }, (_, i) => ({
     x: Math.random() * W, y: Math.random() * H,
     vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
-    r: Math.random() * 2.2 + 1.4, label: i < words.length ? words[i] : null, hot: i % 9 === 0
+    r: Math.random() * 2.2 + 1.4, label: i < words.length ? tr(words[i]) : null, hot: i % 9 === 0
   }));
 }
 function drawNet() {
@@ -95,7 +103,7 @@ function initNebula() {
     s: Math.random() * 1.6 + .4, a: Math.random() * .6 + .25, sp: Math.random() * .6 + .4
   }));
   orbs = Array.from({ length: 22 }, () => ({ p: parts[Math.floor(Math.random() * parts.length)], r: Math.random() * 26 + 10 }));
-  labels = words.map((w, i) => ({ w, p: parts[(i * 97) % parts.length] }));
+  labels = words.map((w, i) => ({ w: tr(w), p: parts[(i * 97) % parts.length] }));
   ctx.fillStyle = '#030208'; ctx.fillRect(0, 0, W, H);
 }
 function flow(x, y) {
@@ -253,6 +261,33 @@ const P = [
       <p>POST пропонує Полтаві новий підхід до роботи з публічним простором — через сучасне мистецтво, відкритість до різних інтерпретацій та постійну культурну взаємодію.</p>
       <p>Платформа покликана створювати можливості для українських і міжнародних митців, підтримувати локальне мистецьке середовище та залучати громаду до осмислення історії й сучасності міста.</p>
       <blockquote>POST — це не новий пам'ятник. Це новий спосіб працювати з пам'яттю.<br>Місце не отримує остаточного значення. Воно продовжує говорити.</blockquote>`,
+    en: { title: 'POST', meta: '2026 · Poltava', badge: 'Coming soon',
+      short: 'A platform for contemporary public art: the interaction of art, city and community, and new approaches to the artistic reading of urban space.',
+      tags: ['Public art', 'Site-specific', 'Open calls', 'Archive'],
+      lead: `POST is a long-term platform for contemporary public art that works with urban space, memory, history and current social processes through contemporary art practices.`,
+      body: `<p>The idea of the platform emerged around the site of the former monument to Peter I in Poltava. After the monument was dismantled, the question arose of what to do with this symbolically charged place.</p>
+      <p>Instead of erecting a new permanent monument, POST proposes a different model: to turn the site into an open space for temporary artworks, art interventions and public dialogue.</p>
+      <blockquote>Not to replace one monument with another, but to create a place that can keep changing together with the city.</blockquote>
+      <h4>Concept and approach</h4>
+      <p>POST sees public space not only as a physical territory but as an environment where cultural meanings are formed and rethought.</p>
+      <p>The platform will work with temporary installations, site-specific art, sculpture, digital and media practices, performance and other forms of artistic expression.</p>
+      <p>Each work will interact with the specific place, its history and present-day context. Open calls, curatorial invitations, artistic research, public discussions and educational programmes will be an important part of it.</p>
+      <p>POST follows a cyclical model: one artwork replaces another, and every completed project is documented and becomes part of the platform's archive.</p>
+      <div class="chips"><span>open calls</span><span>curatorial invitations</span><span>artistic research</span><span>public discussions</span><span>educational programmes</span><span>archive</span></div>
+      <h4>History of the site</h4>
+      <p>For decades the site of the former monument to Peter I was a space representing the imperial historical narrative. Its removal opened the possibility to rethink not only the monument itself but also the principle by which the site should be used.</p>
+      <p>Even before POST was formed, the site hosted temporary art interventions. In particular, Roksolana Dudka's work “Rocket”, connected with the international residency INTER3LAB “Borders of Memory”, was exhibited here. In 2025 a Mi-2 helicopter was also displayed here as a symbol of Ukrainian military aviation.</p>
+      <p>This experience became one of the impulses for developing a long-term model for working with the site.</p>
+      <h4>Organisational model</h4>
+      <p>POST is being developed as a partnership-based cultural platform rather than a separate legal entity.</p>
+      <p>The concept of POST was developed by Vartan Markarian and Roksolana Dudka.</p>
+      <p>NGO “Creative Area of Thinking” is the initiator and operator of the platform, responsible for the artistic concept, the curatorial programme, the production of art projects and the development of partnerships.</p>
+      <p>The platform is being developed together with MistoHub, independent experts, the art community and potential Ukrainian and international partners.</p>
+      <h4>Significance for the city</h4>
+      <p>POST offers Poltava a new approach to public space — through contemporary art, openness to different interpretations and ongoing cultural interaction.</p>
+      <p>The platform is meant to create opportunities for Ukrainian and international artists, support the local art scene and involve the community in reflecting on the city's history and present.</p>
+      <blockquote>POST is not a new monument. It is a new way of working with memory.<br>The place does not receive a final meaning. It keeps speaking.</blockquote>`,
+      links: ['Open Call', 'POST archive'] },
     links: [{ t: 'Open Call', u: null }, { t: 'Архів POST', u: null }]
   },
   {
@@ -285,6 +320,35 @@ const P = [
       <p>Другий фестиваль розширив географію мистецької взаємодії, залучив міжнародних учасників і запропонував нову кураторську оптику для осмислення досвіду людини в умовах сучасних суспільних трансформацій.</p>
       <p>Для ГО «Креативна область Мислення» цей проєкт став наступним етапом формування незалежної культурної платформи, відкритої до експерименту, міждисциплінарності та міжнародного мистецького діалогу.</p>
       <blockquote>МЕТАНОЯ — це не лише зміна обставин. Це зміна способу бачити, мислити та бути у світі.</blockquote>`,
+    en: { title: 'METANOIA', meta: '2026 · Festival of contemporary digital art in Poltava', badge: 'Festival',
+      short: 'The second festival of contemporary digital art: inner transformation, rethinking reality and how we interact with it in times of war.',
+      tags: ['Digital art', 'New media', '28 artists'],
+      lead: `METANOIA is the second festival of contemporary digital art organised by NGO “Creative Area of Thinking” in Poltava.`,
+      body: `<p>The festival explores the transformation of human thinking, perception and inner state in conditions of constant change. At its centre is a person trying to make sense of a new reality, re-evaluate their own experience and find other ways of interacting with the world.</p>
+      <p>The name METANOIA comes from a Greek concept meaning a deep change of mind, worldview and inner position.</p>
+      <h4>Gallery</h4>
+      ${gal('metanoia', 10, 'METANOIA')}
+      <h4>Concept and approach</h4>
+      <p>War, instability and the constant transformation of society change not only outer circumstances but also the way a person perceives themselves and the world around them.</p>
+      <p>METANOIA addresses this process through contemporary digital art, using technology as an artistic tool, an environment and a way of exploring human experience.</p>
+      <p>At the same time, the festival does not limit artistic statements to the theme of war. Its field is much wider: inner change, identity, memory, perception of reality, vulnerability, adaptation and the search for new meanings.</p>
+      <blockquote>The main question of the festival: who do we become when the world around us keeps changing?</blockquote>
+      <h4>Exhibition programme</h4>
+      <div class="stats"><div><b>28</b><small>artists from Ukraine and other countries</small></div><div><b>2nd</b><small>digital art festival of the NGO</small></div><div><b>2</b><small>floor of the Poltava Art Museum</small></div></div>
+      <p>The festival presented works by 28 artists from Ukraine and other countries.</p>
+      <p>The exhibition took place on the second floor of the Poltava Art Museum (Gallery of Arts) and brought together different approaches to digital technologies and contemporary media.</p>
+      <p>The participants' works formed a polyphonic space in which personal experience, technological experiments and reflection on the present interacted with each other.</p>
+      <h4>Venue and context</h4>
+      <p>The exhibition was held at the Poltava Art Museum — a place where different art traditions and ways of understanding contemporary culture meet.</p>
+      <p>Hosting the festival in a museum made it possible to present digital art as part of the current art process and to broaden ideas about how it can exist and be exhibited.</p>
+      <h4>Organisation and curators</h4>
+      <p>Organiser — NGO “Creative Area of Thinking”.<br>Festival curators — Vartan Markarian and Roksolana Dudka.</p>
+      <h4>Significance for the cultural scene</h4>
+      <p>METANOIA continued the development of contemporary digital art in Poltava begun by the festival “Contours of Restoration. Interspace” in 2025.</p>
+      <p>The second festival widened the geography of artistic exchange, brought in international participants and offered a new curatorial lens for understanding human experience amid today's social transformations.</p>
+      <p>For NGO “Creative Area of Thinking” the project became the next stage in building an independent cultural platform open to experiment, interdisciplinarity and international artistic dialogue.</p>
+      <blockquote>METANOIA is not only a change of circumstances. It is a change in the way we see, think and are in the world.</blockquote>`,
+      links: ['digitalfestpoltava.com'] },
     links: [{ t: 'digitalfestpoltava.com', u: 'https://digitalfestpoltava.com/' }]
   },
   {
@@ -315,6 +379,34 @@ const P = [
       <p>«Намисто» створило простір для знайомства та взаємодії між культурними спільнотами двох міст, які часто розвиваються окремо одна від одної. Фестиваль показав, що регіональна культурна сцена може формуватися не лише навколо окремих інституцій чи великих центрів, а й завдяки горизонтальним зв'язкам між незалежними ініціативами.</p>
       <p>Для ГО «Креативна область Мислення» участь у створенні «Намиста» стала можливістю розвивати міжміську співпрацю та представляти полтавське сучасне мистецтво в ширшому регіональному контексті.</p>
       <blockquote>«Намисто» — це спроба з'єднати окремі культурні середовища в мережу, у якій взаємодія стає основою спільного розвитку.</blockquote>`,
+    en: { title: 'NAMYSTO', meta: '9–10 May 2026 · Kremenchuk / Poltava', badge: 'Showcase festival',
+      short: 'An intercity showcase festival: local artists, musicians, cultural managers and independent initiatives of Poltava and Kremenchuk.',
+      tags: ['Music', 'Film', 'Literature', 'Talks', 'Exhibitions'],
+      lead: `NAMYSTO (“Necklace”) is a two-day showcase festival of local contemporary art that brought together three independent cultural communities of Poltava and Kremenchuk in a format of mutual presentation.`,
+      body: `<p>Over two days the cities took turns hosting presentations of each other's art practices, local initiatives and cultural scenes.</p>
+      <p>The festival took place on 9 May in Kremenchuk and on 10 May in Poltava. Its programme combined music, film, literature, visual art, talks, city tours and workshops.</p>
+      <h4>Video</h4>
+      ${yt('leHByRFYGVM', 'NAMYSTO — festival video')}
+      <h4>Concept and approach</h4>
+      <p>The idea of NAMYSTO grew out of the need not only to develop local cultural scenes but also to build lasting connections between them. The festival proposed a model of horizontal exchange in which cities do not compete for cultural attention but open their art scenes to each other.</p>
+      <p>The name became a metaphor for this union: separate beads, each with its own shape and character, strung together form a whole. In the same way, different cultural communities, practices and experiences form the shared heritage of the region.</p>
+      <h4>Format and programme</h4>
+      <p>The festival unfolded as a two-way cultural exchange. On 9 May Kremenchuk hosted the Poltava programme at the City Palace of Culture, and the next day Poltava became the stage for Kremenchuk artists at the art space “Kultura” (K2 ARKA).</p>
+      <p>The programme covered many areas of contemporary culture: concerts, film screenings, literary readings, talks, city tours, exhibitions, workshops and art installations. It introduced the audience not only to individual authors and works but also to the communities that shape the cultural life of both cities.</p>
+      <p>This format made it possible to see the local scenes from the inside — through people, independent initiatives, art practices and the stories of places.</p>
+      <div class="chips"><span>concerts</span><span>film screenings</span><span>literary readings</span><span>talks</span><span>city tours</span><span>exhibitions</span><span>workshops</span><span>art installations</span></div>
+      <h4>Organisers and partnership</h4>
+      <p>The festival was created by three cultural communities:</p>
+      <p><b>O'Komova</b> (Kremenchuk) — a cultural association that initiates art events and creates platforms for interaction. ${IG('okomo.va')}<br><b>Dvizh Lab</b> (Poltava) — a community developing an environment around contemporary art and cultural self-identification. ${IG('dvij_lab')}<br><b>NGO “Creative Area of Thinking”</b> (Poltava) — an organisation working with interdisciplinary art projects, audiovisual collaborations and research.</p>
+      <p>The joint work of the three teams became the basis of the festival: each represented its own city, its cultural scene and the people working to develop it.</p>
+      <h4>Support</h4>
+      <p>NAMYSTO won the grant programme of the “Zaviaz” workshop run by the cultural agency “Tereny”. The programme was funded by Adam Harber Foundation and Obriy Holiday Village.</p>
+      <p>The festival also had a charity component: during the events, funds were raised for the Frame Workshop initiative building mobile hospitals for the front. The goal was UAH 100,000 for the evacuation vehicle “Bublyk”.</p>
+      <h4>Significance for the cultural scene</h4>
+      <p>NAMYSTO created space for the cultural communities of two cities, which often develop separately, to meet and interact. The festival showed that a regional cultural scene can form not only around institutions or big centres but also through horizontal ties between independent initiatives.</p>
+      <p>For NGO “Creative Area of Thinking” co-creating NAMYSTO was an opportunity to develop intercity cooperation and to present Poltava's contemporary art in a wider regional context.</p>
+      <blockquote>NAMYSTO is an attempt to string separate cultural scenes into a network where interaction becomes the basis of shared growth.</blockquote>`,
+      links: ['Media coverage', 'Photos · O\'Komova', 'Photos · K2 Arka', 'O\'Komova', 'Dvizh Lab'] },
     links: [{ t: 'Публікації в медіа', u: 'https://www.instagram.com/p/DX_Wh_Yghy6/' }, { t: 'Фото · О\'Комова', u: 'https://www.instagram.com/p/DYpdkIYjM8v/' }, { t: 'Фото · K2 Арка', u: 'https://www.instagram.com/p/DYNBxrYDNC3/' }, { t: 'О\'Комова', u: 'https://www.instagram.com/okomo.va/' }, { t: 'Двіж Лаб', u: 'https://www.instagram.com/dvij_lab/' }]
   },
   {
@@ -349,13 +441,48 @@ const P = [
       <p>«Полтавська Хода звіздарів» повертає різдвяну традицію в повсякденне культурне життя міста та створює простір для взаємодії між поколіннями. Вона поєднує локальну історію з сучасними мистецькими практиками, даючи можливість не лише зберігати культурну пам'ять, а й доповнювати її новими досвідами.</p>
       <p>Цінність проєкту — у його тривалості. Кожен наступний рік може додавати нових учасників, авторські зірки, дослідницькі матеріали, колядки та історії, формуючи живий архів традиції.</p>
       <blockquote>Ми не прагнемо зберегти традицію незмінною. Ми хочемо, щоб вона продовжувала жити, рухатися містом і переходити від покоління до покоління.</blockquote>`,
+    en: { title: 'Poltava Star Procession', meta: '2025 → 2026 · Poltava', badge: 'Annual',
+      short: 'Reviving and reimagining the Christmas tradition of star-bearers (zvizdari): authors\' stars, community involvement, a new city tradition.',
+      tags: ['Heritage', 'Archive', 'Open Call', 'Community', 'City'],
+      lead: `A living tradition. City. Star. Community.`,
+      body: `<p>The Poltava Star Procession (Poltavska Khoda zvizdariv) is a cultural initiative to revive, research and reimagine the Christmas tradition of star-bearing in the Poltava region. The project combines work with local cultural heritage, archives and oral history with contemporary art, educational and public practices.</p>
+      <p>At the centre of the initiative is the Christmas star as a symbol of carolling, memory and community. Through the making of authors' stars, carolling and a shared procession through the city streets, the tradition returns to the contemporary cultural life of Poltava.</p>
+      <h4>Concept and approach</h4>
+      <p>Star-bearing is part of the Ukrainian Christmas tradition, linked to carollers' rounds accompanied by a Christmas star. Ethnographic sources record the practice in the Poltava region as well, in particular in the Velyka Bahachka, Zinkiv, Hadiach and Poltava districts. Traditional Poltava stars could have six to eight rays, were decorated with various materials and could hold a candle and a Christmas icon inside.</p>
+      <p>For the project it is important not simply to reproduce a historical form or reconstruct a ritual of a certain period, but to return the tradition to a living cultural environment — so that it can develop, change and be passed on to the next generations.</p>
+      <p>That is why, alongside traditional stars, the procession can include authors' art objects, experimental constructions, textile, light and digital interpretations. What stays unchanged is the essence — the star as a symbol that unites people in a shared Christmas practice.</p>
+      <h4>The first procession — 2025</h4>
+      <p>In 2025 the first contemporary Poltava Star Procession took place. The initiative brought participants together around the Christmas tradition: star-bearers carried stars through the city streets, carols were sung, and public space became a place of shared celebration and cultural interaction.</p>
+      <p>One of the central art objects was a large Christmas star about 3 × 3 metres, created by Roksolana Dudka and Vartan Markarian. It combined textile, collage, hand printing, light, RGB lighting and bells. The traditional image received a contemporary artistic form designed specifically for moving through the city.</p>
+      <h4>Research and archive work</h4>
+      <p>An important part of the project was researching the history of Christmas traditions in the Poltava region and searching for materials that preserve the memory of earlier generations of star-bearers and carollers.</p>
+      <p>While preparing the first procession, private photos and videos of the Poltava “Koliada” of 1995 were found. Roksolana Dudka discovered them in the family archive of Volodymyr Danyleiko — a cultural scholar, researcher of Ukrainian traditions and organiser of that event.</p>
+      <p>These materials made it possible to trace the link between different stages of the revival of the Christmas tradition in Poltava: from the events of 1995 to today's procession. Archive work becomes not only a way of documenting the past but also a resource for the further development of a living cultural practice.</p>
+      <h4>The procession as public space and community-making</h4>
+      <p>The format of the procession is essential: the star does not stay a museum piece or an exhibit — it moves through the city together with people and carols.</p>
+      <p>Streets, squares and city routes become part of the Christmas event. Residents can join the procession, sing carols, make their own stars and pass the tradition on to their children.</p>
+      <p>The initiative is open to many participants and communities: families, children and young people, artists, craftspeople, students, educational and cultural institutions, art groups and local communities. The organisers do not act as owners of the tradition but create conditions for continuing it together.</p>
+      <h4>Further development</h4>
+      <p>In 2026 the procession continues as an annual cultural initiative. One of the key directions of this stage is open authorship and the decentralisation of star-making.</p>
+      <p>Instead of a single approved form, the project aims to support a diversity of interpretations and to involve new authors and communities in making stars. Its tools include open calls, educational programmes and workshops that combine traditional constructions and materials with contemporary art approaches. In the future each procession may get a new central star made by a different author or group. Gradually this will form a polyphonic visual image of the tradition, and the objects themselves may become part of the history of contemporary Poltava and its cultural collections.</p>
+      <h4>Organisation</h4>
+      <p>The founders of the Poltava Star Procession are Diana Shaidaieva, Ilona Kyslova-Cherniavska, Roksolana Dudka, Natalka Barannyk, Viktor Kropyvnyi, Liana Salekh and Alina Zinchenko (the project also develops with the participation of NGO “Creative Area of Thinking”, the café “Kavun” and the studio “Kontenta”). For the NGO this project is a way of working with intangible cultural heritage through contemporary art, research, public events and community involvement.</p>
+      <p>The work covers developing the concept, art curation, research into the local tradition, archive work, cooperation with artists and cultural communities, organising events and documentation.</p>
+      <h4>Significance for the city</h4>
+      <p>The Poltava Star Procession brings the Christmas tradition back into the everyday cultural life of the city and creates space for interaction between generations. It connects local history with contemporary art practices, making it possible not only to preserve cultural memory but also to add new experiences to it.</p>
+      <p>The value of the project lies in its continuity. Every year can add new participants, authors' stars, research materials, carols and stories, forming a living archive of the tradition.</p>
+      <blockquote>We do not want to keep the tradition unchanged. We want it to keep living, moving through the city and passing from generation to generation.</blockquote>`,
+      links: ['Instagram · @khodazvizdariv_plt', 'Procession video'] },
     links: [{ t: 'Instagram · @khodazvizdariv_plt', u: 'https://www.instagram.com/khodazvizdariv_plt/' }, { t: 'Відео Ходи', u: 'https://www.instagram.com/p/DS7C68gCMRm/' }]
   },
   {
     id: 'zvizdy', title: 'Конструктор звізд', meta: '2026 · Полтавська Хода звіздарів', badge: 'Інтерактив', live: true, cat: ['heritage', 'community', 'digital'], pc: '#2a1b15', art: 'zvizdy', img: 'img/zvizdy-grid.webp',
     href: 'constructorzvizd/', hrefClaude: 'https://claude.ai/artifact/H7fz9JSorct1sTtwm4Zgic',
     short: 'Онлайн-конструктор різдвяних звізд за мотивами полтавської різьби, майоліки, вишивки й писанок: 18 основ, кольори, прикраси, викрійки A4–A2.',
-    tags: ['Онлайн-інструмент', '18 основ', 'Викрійки A4–A2']
+    tags: ['Онлайн-інструмент', '18 основ', 'Викрійки A4–A2'],
+    en: { title: 'Star Builder', meta: '2026 · Poltava Star Procession', badge: 'Interactive',
+      short: 'An online builder of Christmas stars inspired by Poltava wood carving, majolica, embroidery and pysanky: 18 bases, colours, decorations, A4–A2 patterns.',
+      tags: ['Online tool', '18 bases', 'A4–A2 patterns'] }
   },
   {
     id: 'kontury', title: 'Контури відновлення. Міжпростір', meta: '2025 · Фестиваль сучасного діджитал мистецтва в Полтаві', badge: 'Фестиваль', cat: ['digital', 'intl'], pc: '#1b1b1b', pos: '50% 6%',
@@ -394,6 +521,42 @@ const P = [
       <p>Проєкт розширив можливості локального культурного середовища, створив простір для взаємодії митців з різних міст і представив цифрове мистецтво як повноцінну частину сучасного культурного процесу.</p>
       <p>Для ГО «Креативна область Мислення» фестиваль став важливим етапом розвитку мистецьких і міждисциплінарних практик, а також основою для подальших культурних ініціатив, зокрема фестивалю «МЕТАНОЯ» у 2026 році.</p>
       <blockquote>«Контури відновлення. Міжпростір» — про здатність створювати нові сенси навіть тоді, коли навколо темрява.</blockquote>`,
+    en: { title: 'Contours of Restoration. Interspace', meta: '2025 · Festival of contemporary digital art in Poltava', badge: 'Festival',
+      short: 'The first festival of contemporary digital art in Poltava. Held during a blackout, it explored the connection between art, technology, memory and cultural restoration.',
+      tags: ['VR', 'Video art', 'Installations', 'Performance', 'Education'],
+      lead: `“Contours of Restoration. Interspace” is the first festival of contemporary digital art in Poltava, created as a space of interaction between contemporary art, digital technologies, culture and society's experience of war.`,
+      body: `<p>The festival explored the ability of art to speak about memory, loss, transformation and restoration through digital and interdisciplinary practices.</p>
+      <p>Its concept was based on the idea that even in times of uncertainty and destruction people are able to create new connections, meanings and spaces of interaction.</p>
+      <h4>Video · Contours of Restoration. Interspace</h4>
+      ${yt('UJdV6lPrt4k', 'Contours of Restoration. Interspace — video')}
+      <h4>Gallery</h4>
+      ${gal('kontury', 10, 'Contours of Restoration')}
+      <h4>Concept and approach</h4>
+      <p>The name of the festival reflects two connected ideas.</p>
+      <p><b>“Contours of Restoration”</b> — the search for new ways of making sense of the experience of war, memory and the changes society is going through.</p>
+      <p><b>“Interspace”</b> — the territory of interaction between physical and digital environments, art and technology, personal experience and collective memory.</p>
+      <p>The festival brought together different art practices in which digital technologies became not only a means of making artworks but also a tool for exploring today's reality.</p>
+      <h4>A festival during a blackout</h4>
+      <p>One of the defining features of the festival was the conditions under which it took place.</p>
+      <p>The event was held during a full blackout in Poltava. The exhibition and educational activities unfolded across five floors of the regional library.</p>
+      <p>The lack of usual lighting and electricity became part of the festival's context. Instead of cancelling the event, the team kept working and created a space for art, meetings and interaction.</p>
+      <blockquote>In the dark, people create light.</blockquote>
+      <p>This idea became one of the key symbolic dimensions of the festival.</p>
+      <div class="stats"><div><b>1st</b><small>digital art festival in Poltava</small></div><div><b>5</b><small>floors of the regional library</small></div><div><b>UA + 🌍</b><small>Ukrainian and international digital artists</small></div></div>
+      <h4>Programme</h4>
+      <p>The festival combined exhibition, educational and communication programmes. Formats included:</p>
+      <div class="chips"><span>digital and media art</span><span>VR and video art</span><span>art installations</span><span>talks and public meetings</span><span>workshops and masterclasses</span><span>interdisciplinary education</span></div>
+      <p>Ukrainian and international digital artists and cultural practitioners took part.</p>
+      <p>The festival gave local audiences a chance to discover contemporary digital art practices and enabled professional exchange between people from different cultural scenes.</p>
+      <h4>Organisation and support</h4>
+      <p>The festival was organised by NGO “Creative Area of Thinking” with support from NOVA United within its sub-grant programme for civil society organisations in Poltava.</p>
+      <p>For the organisation it was important experience in raising grant funding, cultural production and creating a large interdisciplinary event in the region.</p>
+      <h4>Significance for the city</h4>
+      <p>“Contours of Restoration. Interspace” set a precedent for presenting contemporary digital art in Poltava in a festival format.</p>
+      <p>The project expanded the possibilities of the local cultural scene, created space for artists from different cities to interact and presented digital art as a full part of the contemporary cultural process.</p>
+      <p>For NGO “Creative Area of Thinking” the festival was an important stage in developing art and interdisciplinary practices and a foundation for further initiatives, including the METANOIA festival in 2026.</p>
+      <blockquote>“Contours of Restoration. Interspace” is about the ability to create new meanings even when there is darkness all around.</blockquote>`,
+      links: ['digitalfestpoltava.com'] },
     links: [{ t: 'digitalfestpoltava.com', u: 'https://digitalfestpoltava.com/' }]
   },
   {
@@ -443,6 +606,53 @@ const P = [
       <p>Inter3Lab продемонстрував, що міська історія, архітектура, публічні простори та особисті спогади мешканців можуть ставати повноцінним матеріалом для сучасного мистецтва. Проєкт відкрив можливість інакше подивитися на звичні міські локації, поставити питання про пам'ять і спадщину та залучити мешканців до взаємодії з актуальними мистецькими практиками.</p>
       <p>Для ГО цей досвід став одним із важливих етапів розвитку компетенцій у сфері кураторства, локальної координації, міжнародної комунікації та роботи з публічним простором.</p>
       <blockquote>Inter3Lab Poltava — досвід, у якому міжнародне мистецтво зустрілося з локальною пам'яттю, а саме місто стало простором для нового прочитання власної історії.</blockquote>`,
+    en: { title: 'Inter3Lab Poltava', meta: '2024 · Poltava', badge: 'Residency',
+      short: '“Borders of Memory”: artists from Poland, Georgia and Ukraine on decolonisation and de-imperialisation. The NGO curated and managed the library venue.',
+      tags: ['Public interventions', 'Ukraine · Poland · Georgia', 'Memory'],
+      lead: `Inter3Lab Poltava is an international art residency of public interventions that turned Poltava's urban space into an open platform for contemporary art, the exploration of memory and interaction between international artists and the local community.`,
+      body: `<p>The Poltava residency took place within the international programme One Europe One Caucasus II / Inter3Labs. Its local title — “Borders of Memory” — defined the main focus: exploring how a city preserves, changes and rethinks its own stories and its cultural and historical narratives.</p>
+      <h4>Library venue</h4>
+      <dl class="facts">
+        <div><dt>Year</dt><dd>2024</dd></div>
+        <div><dt>Venue</dt><dd>Poltava Regional Universal Scientific Library named after I. P. Kotliarevsky — one of the five venues of the project</dd></div>
+        <div><dt>Curators</dt><dd>Roksolana Dudka (together with Witek Chebanowski); manager — Natalia Barannyk</dd></div>
+        <div><dt>Partners</dt><dd>NGO “Congress of Cultural Activists”, The Other Space Foundation; co-funded by Creative Europe and the Ministry of Foreign Affairs of Poland (“Public Diplomacy 2024”)</dd></div>
+      </dl>
+      <h4>A route through the library · photos</h4>
+      <div class="filmstrip-wrap">
+        <div class="filmstrip" tabindex="0" aria-label="Photos from the library venue — scroll sideways">
+          ${Array.from({ length: 11 }, (_, i) => { const n = String(i + 1).padStart(2, '0'); return `<figure class="stop"><img src="img/gal/inter3lab-${n}.webp" alt="Inter3Lab Poltava, library — photo ${i + 1}" loading="lazy"><figcaption><b>${n}</b> / 11</figcaption></figure>`; }).join('')}
+        </div>
+        <div class="filmstrip-nav"><button type="button" data-fs="-1" aria-label="Back">←</button><span>scroll the route</span><button type="button" data-fs="1" aria-label="Next">→</button></div>
+      </div>
+      <h4>Video · Inter3Lab Poltava</h4>
+      ${yt('aQQe517zkfg', 'Inter3Lab Poltava — video')}
+      <h4>Two days of presentations at the library</h4>
+      <div class="stats"><div><b>~500</b><small>visitors</small></div><div><b>6</b><small>video works in a parallel screening</small></div><div><b>live</b><small>continuous performances</small></div></div>
+      <div class="chips"><span>meetings with artists</span><span>authors' tours</span><span>installations</span><span>photo project by a Polish artist</span></div>
+      <h4>Concept and approach</h4>
+      <p>Inter3Lab proposed a model of artistic work in which the city became not just a venue for events but the very material for artistic research.</p>
+      <p>Artists worked with specific locations, their history, architecture, functions and the memory of residents. Key themes were decommunisation, decolonisation, rethinking urban heritage and exploring the controversial pages of Poltava's history.</p>
+      <p>Instead of showing pre-made works, the residency meant immersion in the local context: getting to know the city, talking to people, exploring spaces and creating art interventions in direct connection with the place.</p>
+      <h4>The city as an exhibition space</h4>
+      <p>The project was not limited to a gallery or a cultural institution. Poltava itself became the exhibition space: streets, squares, courtyards, public buildings and former cultural venues.</p>
+      <p>The Poltava programme included 24 separate art projects. Artists worked with installation, performance, theatre, dance, photography, audiovisual art, architecture and participatory practices.</p>
+      <p>In November 2024 a public art walk brought together art interventions, exhibitions, theatre performances and tours. Artists from Ukraine and Georgia took part in the Poltava programme.</p>
+      <p>The city route thus became a space for encountering different artistic statements, and residents had the chance to interact with art directly in their familiar urban environment.</p>
+      <div class="stats"><div><b>24</b><small>separate art projects</small></div><div><b>11.2024</b><small>public art walk</small></div><div><b>UA · PL · GE</b><small>residency artists</small></div></div>
+      <h4>The role of NGO “Creative Area of Thinking”</h4>
+      <p>The NGO team provided local organisational and logistical support for Inter3Lab in Poltava. The organisation helped with communication, engagement with the local context, work with venues and practical coordination during the art programme. At the library venue of the residency, the CAT team was responsible for curation and management.</p>
+      <p>The NGO's participation thus took the form of local cultural mediation and organisational support for an international art process.</p>
+      <p>The organisation's representative Roksolana Dudka combined curatorial work with her own art practice within the residency.</p>
+      <h4>International cooperation</h4>
+      <p>Inter3Lab became an example of how an international art programme can interact with a specific urban environment. Artists from different countries worked with Poltava's local history, entered into dialogue with residents and created works that grew directly out of researching the city.</p>
+      <p>The project was implemented within One Europe One Caucasus II with support from the Ministry of Foreign Affairs of Poland under the Public Diplomacy 2024 programme and Creative Europe.</p>
+      <p>For NGO “Creative Area of Thinking” this cooperation was important experience of working with international cultural processes, interdisciplinary teams and the local art scene.</p>
+      <h4>Significance for the city and further work</h4>
+      <p>Inter3Lab showed that urban history, architecture, public spaces and residents' personal memories can become full-fledged material for contemporary art. The project made it possible to look differently at familiar places, raise questions of memory and heritage and involve residents in contemporary art practices.</p>
+      <p>For the NGO this experience was an important stage in developing competences in curation, local coordination, international communication and work with public space.</p>
+      <blockquote>Inter3Lab Poltava — an experience in which international art met local memory, and the city itself became a space for a new reading of its own history.</blockquote>`,
+      links: ['Presentation video'] },
     links: [{ t: 'Відео з презентації', u: 'https://www.instagram.com/p/DG0bwvupoz3/' }]
   },
   {
@@ -462,28 +672,44 @@ const P = [
       <p>Важливим етапом стала презентація учасницьких ідей та фінальний пітчинг. У співпраці з ГО «О'Комова» (Кременчук) і ГО «ДВІЖЛАБ» (Полтава) наша команда представила концепцію міжрегіонального проєкту «Намисто» — культурного обміну між двома містами. Проєкт увійшов до трійки переможців і отримав грантову підтримку в розмірі 2 000 євро на реалізацію, а також менторський супровід культурної агенції «Терени». Згодом ця ідея стала дводенним шоукейс-фестивалем сучасного мистецтва Полтави й Кременчука.</p>
       <p>Участь у програмі стала для команди можливістю переглянути внутрішні процеси, посилити професійні навички та налагодити нові міжрегіональні зв'язки.</p>
       <p style="font-size:13px">Організатор програми «Зав'язь» — культурна агенція «Терени», за підтримки Міжнародного фонду «Відродження» та Goethe-Institut. Фото — Станіслава Пантелей.</p>`,
+    en: { title: 'Cultural management', dtitle: '“Zaviaz” — a workshop for cultural practitioners', meta: '2026 · Poltava · “Zaviaz” workshop', badge: 'Education',
+      short: 'Education, professional development and exchange: the four-day intensive “Zaviaz”, from which the NAMYSTO festival grew.',
+      tags: ['Cultural management', 'Education', 'Partnerships', 'Grant'],
+      lead: `We see education as an important part of developing an independent cultural environment.`,
+      body: `<p>We work on strengthening our own competences in cultural management, production, communications, partnerships and work with cultural heritage, and we take part in educational programmes, professional meetings and interdisciplinary exchanges.</p>
+      <p>For us, learning is not only about gaining new knowledge but also an opportunity to rethink our own approaches, find partners and turn ideas into real cultural projects.</p>
+      <h4>Photos</h4>
+      <div class="gallery"><img src="img/zav-group.webp" alt="Participants of the Zaviaz workshop" loading="lazy"><img src="img/zav-pitch.webp" alt="Presentation of the NAMYSTO project at the pitch" loading="lazy"><img src="img/zav-award.webp" alt="Awarding the winners' certificate" loading="lazy"><img src="img/zav-walk.webp" alt="Workshop participants in the city" loading="lazy"></div>
+      <h4>“Zaviaz” — a workshop for cultural practitioners</h4>
+      <p>In 2026 the team of NGO “Creative Area of Thinking” took part in the four-day intensive “Zaviaz”, organised by the cultural agency “Tereny” in Poltava.</p>
+      <p>The programme covered cultural management, project funding, building partnerships, communication strategies, working in wartime, memory and memorialisation. Participants also learned about the work of cultural institutions and international foundations, including the International Renaissance Foundation and the Goethe-Institut.</p>
+      <div class="stats"><div><b>4</b><small>days of intensive</small></div><div><b>Top 3</b><small>among the winners</small></div><div><b>€2,000</b><small>for the project + mentoring</small></div></div>
+      <p>An important stage was the presentation of participants' ideas and the final pitch. Together with NGO “O'Komova” (Kremenchuk) and NGO “Dvizh Lab” (Poltava), our team presented the concept of the interregional project NAMYSTO — a cultural exchange between the two cities. The project was among the three winners and received a grant of €2,000 for implementation as well as mentoring from the cultural agency “Tereny”. The idea later became a two-day showcase festival of contemporary art from Poltava and Kremenchuk.</p>
+      <p>Taking part in the programme gave the team a chance to review internal processes, strengthen professional skills and build new interregional connections.</p>
+      <p style="font-size:13px">The “Zaviaz” programme was organised by the cultural agency “Tereny” with support from the International Renaissance Foundation and the Goethe-Institut. Photos — Stanislava Pantelei.</p>`,
+      links: [] },
     links: []
   }
 ];
 
 const grid = $('#projGrid');
 const posterImg = src => `<img class="pbg" src="${src}" alt="" aria-hidden="true"><img class="pfg" src="${src}" alt="" loading="lazy">`;
-const media = p => p.poster ? posterImg(p.img) : p.img ? `<img src="${p.img}" alt="${p.title} — Креативна область мислення, Полтава" loading="lazy"${p.pos ? ` style="object-position:${p.pos}"` : ''}>` : ART[p.art]();
+const media = p => p.poster ? posterImg(p.img) : p.img ? `<img src="${p.img}" alt="${L(p, 'title')} — ${isEn() ? 'Creative Area of Thinking, Poltava' : 'Креативна область мислення, Полтава'}" loading="lazy"${p.pos ? ` style="object-position:${p.pos}"` : ''}>` : ART[p.art]();
 let firstRender = true;
 function renderGrid() {
   const f = ($('#filters .on') || {}).dataset?.f || 'all';
   grid.innerHTML = P.map((p, i) => `
     <${p.href ? `a href="${FRAMED && p.hrefClaude ? p.hrefClaude : p.href}" target="_blank" rel="noopener"` : 'button'} class="card${firstRender ? '' : ' in'}${f !== 'all' && !p.cat.includes(f) ? ' hide' : ''}" data-id="${p.id}" data-cat="${p.cat.join(' ')}" style="--pc:${p.pc};transition-delay:${firstRender ? (i % 3) * 80 : 0}ms">
       <div class="card-media${p.poster ? ' is-poster' : ''}">
-        <span class="card-badge${p.live ? ' live' : ''}">${p.badge}</span>
+        <span class="card-badge${p.live ? ' live' : ''}">${L(p, 'badge')}</span>
         <span class="card-arrow" aria-hidden="true">${p.href ? "↗" : "→"}</span>
         ${media(p)}
       </div>
       <div class="card-body">
-        <span class="card-meta">${p.meta}</span>
-        <h3>${p.title}</h3>
-        <p>${p.short}</p>
-        <div class="card-tags">${p.tags.map(x => `<span>${x}</span>`).join('')}</div>
+        <span class="card-meta">${L(p, 'meta')}</span>
+        <h3>${L(p, 'title')}</h3>
+        <p>${L(p, 'short')}</p>
+        <div class="card-tags">${L(p, 'tags').map(x => `<span>${x}</span>`).join('')}</div>
       </div>
     </${p.href ? 'a' : 'button'}>`).join('');
   if (firstRender) { $$('.card', grid).forEach(c => cardObs.observe(c)); firstRender = false; }
@@ -505,14 +731,15 @@ function openP(id) {
   const p = P.find(x => x.id === id); if (!p) return;
   lastFocus = document.activeElement; openId = id;
   fillMedia(p);
-  $('#dMeta').textContent = p.meta;
-  $('#dTitle').textContent = p.dtitle || p.title;
-  $('#dLead').textContent = p.lead;
-  $('#dText').innerHTML = p.body;
-  $('#dTags').innerHTML = p.tags.map(x => `<span>${x}</span>`).join('');
-  $('#dLinks').innerHTML = (p.links || []).map(l => l.u
-    ? `<a href="${l.u}" target="_blank" rel="noopener">${l.t} ↗</a>`
-    : `<a class="pending" href="#" onclick="return false" title="Посилання додамо">${l.t} · скоро</a>`).join('');
+  $('#dMeta').textContent = L(p, 'meta');
+  $('#dTitle').textContent = isEn() && p.en ? (p.en.dtitle || p.en.title) : (p.dtitle || p.title);
+  $('#dLead').textContent = L(p, 'lead');
+  $('#dText').innerHTML = L(p, 'body');
+  $('#dTags').innerHTML = L(p, 'tags').map(x => `<span>${x}</span>`).join('');
+  const lt = (l, i) => (isEn() && p.en && p.en.links && p.en.links[i]) || l.t;
+  $('#dLinks').innerHTML = (p.links || []).map((l, i) => l.u
+    ? `<a href="${l.u}" target="_blank" rel="noopener">${lt(l, i)} ↗</a>`
+    : `<a class="pending" href="#" onclick="return false" title="${tr('Посилання додамо')}">${lt(l, i)} · ${tr('скоро')}</a>`).join('');
   $('#dLinksTop').innerHTML = $('#dLinks').innerHTML;
   $('#dLinksTop').hidden = !(p.links || []).length;
   dr.classList.add('open'); dr.setAttribute('aria-hidden', 'false'); document.body.classList.add('lock');
@@ -532,7 +759,7 @@ function openApp(href, title) {
     appLayer = document.createElement('div');
     appLayer.className = 'app-layer';
     appLayer.setAttribute('role', 'dialog'); appLayer.setAttribute('aria-modal', 'true');
-    appLayer.innerHTML = '<div class="app-bar"><span class="app-title"></span><button type="button" class="app-close" aria-label="Закрити">✕ Закрити</button></div><iframe class="app-frame" title=""></iframe>';
+    appLayer.innerHTML = `<div class="app-bar"><span class="app-title"></span><button type="button" class="app-close" aria-label="${tr('Закрити')}">${tr('✕ Закрити')}</button></div><iframe class="app-frame" title=""></iframe>`;
     document.body.appendChild(appLayer);
     $('.app-close', appLayer).addEventListener('click', closeApp);
   }
@@ -590,7 +817,7 @@ const toggle = $('#themeToggle'), metaTheme = $('meta[name="theme-color"]');
 function syncUi() {
   const d = isDark();
   toggle.setAttribute('aria-pressed', d);
-  toggle.title = d ? 'Увімкнути світлу тему' : 'Увімкнути темну тему';
+  toggle.title = tr(d ? 'Увімкнути світлу тему' : 'Увімкнути темну тему');
   metaTheme.setAttribute('content', d ? '#06050B' : '#EEEBE3');
 }
 function applyTheme(next) {
@@ -614,4 +841,38 @@ toggle.addEventListener('click', e => {
       { duration: 750, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' });
   }).catch(() => {});
 });
+
+/* =========================================================
+   ПЕРЕМИКАЧ МОВИ — UA / EN (конструктор має власний переклад)
+   ========================================================= */
+const ukText = new WeakMap(), ukAttr = new WeakMap();
+const SKIP = '#projGrid, #dText, #dTitle, #dLead, #dMeta, #dTags, #dLinks, #dLinksTop, .lang, script, style';
+const UK_META = { title: document.title, desc: ($('meta[name="description"]') || {}).content };
+function applyLang() {
+  root.lang = isEn() ? 'en' : 'uk';
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, { acceptNode: n => n.parentElement && !n.parentElement.closest(SKIP) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT });
+  for (let n = w.nextNode(); n; n = w.nextNode()) {
+    if (!ukText.has(n)) { if (!n.nodeValue.trim()) continue; ukText.set(n, n.nodeValue); }
+    const uk = ukText.get(n), key = uk.replace(/\s+/g, ' ').trim();
+    if (isEn() && EN[key]) { const m = uk.match(/^(\s*)[\s\S]*?(\s*)$/); n.nodeValue = m[1] + EN[key] + m[2]; } else n.nodeValue = uk;
+  }
+  for (const el of document.querySelectorAll('[aria-label], [title], [alt]')) {
+    if (el.closest('#projGrid, #dText, #dMedia')) continue;
+    let o = ukAttr.get(el); if (!o) { o = {}; for (const a of ['aria-label', 'title', 'alt']) if (el.hasAttribute(a)) o[a] = el.getAttribute(a); ukAttr.set(el, o); }
+    for (const a in o) el.setAttribute(a, isEn() && EN[o[a]] ? EN[o[a]] : o[a]);
+  }
+  document.title = isEn() ? (window.KOM_EN_META || {}).title || UK_META.title : UK_META.title;
+  const md = $('meta[name="description"]'); if (md) md.content = isEn() ? (window.KOM_EN_META || {}).description || UK_META.desc : UK_META.desc;
+  const lb = $('#langToggle');
+  if (lb) { $$('[data-l]', lb).forEach(sp => sp.classList.toggle('on', sp.dataset.l === LANG)); lb.setAttribute('aria-pressed', isEn()); lb.title = isEn() ? 'Українською' : 'English'; }
+}
+function setLang(l) {
+  LANG = l; try { localStorage.setItem('kom-lang', l); } catch (e) {}
+  applyLang(); syncUi(); renderGrid(); initField(); if (reduce) renderStatic();
+  if (openId) { const id = openId; openP(id); }
+}
+const langBtn = $('#langToggle');
+if (langBtn) langBtn.addEventListener('click', () => setLang(isEn() ? 'uk' : 'en'));
+applyLang(); syncUi();
+if (isEn()) { renderGrid(); initField(); if (reduce) renderStatic(); }
 })();
