@@ -513,8 +513,6 @@ function openP(id) {
   $('#dLinks').innerHTML = (p.links || []).map(l => l.u
     ? `<a href="${l.u}" target="_blank" rel="noopener">${l.t} ↗</a>`
     : `<a class="pending" href="#" onclick="return false" title="Посилання додамо">${l.t} · скоро</a>`).join('');
-  const PAGES = { post: 'post', metanoia: 'metanoia', namysto: 'namysto', hoda: 'hoda-zvizdariv', kontury: 'kontury-vidnovlennya', inter3lab: 'inter3lab-poltava', zavyaz: 'zavyaz' };
-  if (!FRAMED && PAGES[p.id]) $('#dLinks').insertAdjacentHTML('beforeend', `<a href="proekty/${PAGES[p.id]}/">Окрема сторінка проєкту →</a>`);
   $('#dLinksTop').innerHTML = $('#dLinks').innerHTML;
   $('#dLinksTop').hidden = !(p.links || []).length;
   dr.classList.add('open'); dr.setAttribute('aria-hidden', 'false'); document.body.classList.add('lock');
@@ -552,17 +550,6 @@ grid.addEventListener('click', e => {
   const pr = P.find(x => x.id === c.dataset.id);
   if (FRAMED && !(pr && pr.hrefClaude)) { e.preventDefault(); openApp(c.getAttribute('href'), c.querySelector('h3').textContent); }
 });
-/* на claude.ai окремі сторінки сайту не відкриваються у вкладці: посилання внизу відкривають опис або конструктор */
-if (FRAMED) {
-  const PAGE2ID = { post: 'post', metanoia: 'metanoia', namysto: 'namysto', 'hoda-zvizdariv': 'hoda', 'kontury-vidnovlennya': 'kontury', 'inter3lab-poltava': 'inter3lab', zavyaz: 'zavyaz' };
-  const zv = P.find(x => x.id === 'zvizdy');
-  $$('.seo-links a').forEach(a => {
-    const h = a.getAttribute('href') || '';
-    const m = h.match(/^proekty\/([\w-]+)\/$/);
-    if (m && PAGE2ID[m[1]]) a.addEventListener('click', e => { e.preventDefault(); openP(PAGE2ID[m[1]]); });
-    else if (h === 'constructorzvizd/' && zv && zv.hrefClaude) { a.href = zv.hrefClaude; a.target = '_blank'; a.rel = 'noopener'; }
-  });
-}
 $$('[data-open]').forEach(b => b.addEventListener('click', () => openP(b.dataset.open)));
 $$('[data-close]', dr).forEach(b => b.addEventListener('click', closeP));
 addEventListener('keydown', e => { if (e.key === 'Escape' && dr.classList.contains('open')) closeP(); });

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://ngocat.com/</loc><lastmod>2026-11-19</lastmod><changefreq>weekly</changefreq><priority>1.0</priority><image:image><image:loc>https://ngocat.com/og-image.jpg</image:loc></image:image><image:image><image:loc>https://ngocat.com/img/team-roksolana-dudka.webp</image:loc></image:image><image:image><image:loc>https://ngocat.com/img/team-vartan-markarian.webp</image:loc></image:image></url>
-  <url><loc>https://ngocat.com/proekty/post/</loc><lastmod>2026-11-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ngocat.com/proekty/metanoia/</loc><lastmod>2026-11-19</lastmod><changefreq>monthly</changefreq><priority>0.9</priority><image:image><image:loc>https://ngocat.com/img/fest-1.webp</image:loc></image:image></url>
-  <url><loc>https://ngocat.com/proekty/namysto/</loc><lastmod>2026-11-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://ngocat.com/img/namysto-hero.webp</image:loc></image:image></url>
-  <url><loc>https://ngocat.com/proekty/hoda-zvizdariv/</loc><lastmod>2026-11-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://ngocat.com/img/hoda-star.webp</image:loc></image:image></url>
+  <url><loc>https://ngocat.com/</loc><lastmod>2026-11-19</lastmod><changefreq>weekly</changefreq><priority>1.0</priority><image:image><image:loc>https://ngocat.com/og-image.jpg</image:loc></image:image></url>
   <url><loc>https://ngocat.com/constructorzvizd/</loc><lastmod>2026-11-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://ngocat.com/constructorzvizd/obyemna/</loc><lastmod>2026-11-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ngocat.com/proekty/kontury-vidnovlennya/</loc><lastmod>2026-11-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://ngocat.com/img/kontury-1.webp</image:loc></image:image></url>
-  <url><loc>https://ngocat.com/proekty/inter3lab-poltava/</loc><lastmod>2026-11-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority><image:image><image:loc>https://ngocat.com/img/inter3lab-poster.webp</image:loc></image:image></url>
-  <url><loc>https://ngocat.com/proekty/zavyaz/</loc><lastmod>2026-11-19</lastmod><changefreq>yearly</changefreq><priority>0.6</priority><image:image><image:loc>https://ngocat.com/img/zav-group.webp</image:loc></image:image></url>
 </urlset>
