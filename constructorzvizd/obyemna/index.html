@@ -2008,4 +2008,84 @@ initDrag();
 addEventListener('pagehide', saveNow);
 </script>
 
+<style>
+/* ===== вікно збору перед завантаженням ===== */
+.zbir-modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(12,6,4,.72);backdrop-filter:blur(6px)}
+.zbir-modal.open{display:flex}
+.zbir-box{position:relative;width:min(640px,100%);max-height:calc(100vh - 32px);overflow:auto;border-radius:var(--r-lg,20px);border:2px solid var(--red);background:linear-gradient(140deg,color-mix(in srgb,var(--red) 18%,var(--panel)) 0%,var(--panel) 55%,color-mix(in srgb,var(--ochre) 16%,var(--panel)) 100%);box-shadow:0 0 0 6px color-mix(in srgb,var(--red) 16%,transparent),0 30px 80px rgba(0,0,0,.5);padding:clamp(20px,3.4vw,32px);animation:zbir-in .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes zbir-in{from{transform:translateY(16px) scale(.97);opacity:0}}
+.zbir-x{position:absolute;top:12px;right:12px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:16px;cursor:pointer}
+.zbir-badge{display:inline-flex;align-items:center;gap:8px;font:600 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--on-red);background:var(--red);padding:7px 12px;border-radius:99px}
+.zbir-badge i{width:8px;height:8px;border-radius:50%;background:var(--on-red);animation:donate-pulse 1.6s infinite}
+.zbir-box h2{font:700 clamp(24px,3.4vw,34px)/1.08 var(--f-display);margin:14px 40px 12px 0;color:var(--ink)}
+.zbir-grid{display:grid;grid-template-columns:auto 1fr;gap:clamp(14px,2.4vw,24px);align-items:start}
+.zbir-qr{display:block;width:clamp(130px,22vw,170px);background:#fff;border-radius:14px;padding:8px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.zbir-qr img{display:block;width:100%;height:auto}
+.zbir-text p{margin:0 0 10px;color:var(--ink);font-size:15.5px;line-height:1.5}
+.zbir-text .zbir-small{color:var(--muted);font-size:13.5px}
+.zbir-goal{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:4px 0 12px;font:600 14px/1.3 var(--f-mono);color:var(--ochre)}
+.zbir-goal a{color:var(--muted);font:400 12.5px var(--f-body);word-break:break-all}
+.zbir-actions{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.zbir-donate{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-weight:700;font-size:17px;padding:15px 22px;border-radius:99px;background:var(--red);color:var(--on-red);box-shadow:0 8px 26px color-mix(in srgb,var(--red) 45%,transparent);transition:transform .2s}
+.zbir-donate:hover{transform:translateY(-2px)}
+.zbir-dl{display:flex;align-items:center;justify-content:center;gap:8px;font:600 15px var(--f-body);padding:13px 20px;border-radius:99px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;transition:border-color .2s,background .2s}
+.zbir-dl:hover{border-color:var(--ink);background:color-mix(in srgb,var(--ink) 6%,transparent)}
+@media (max-width:560px){.zbir-grid{grid-template-columns:1fr}.zbir-qr{width:150px}}
+</style>
+<div class="zbir-modal" id="zbir-modal" role="dialog" aria-modal="true" aria-labelledby="zbir-h" hidden>
+  <div class="zbir-box">
+    <button type="button" class="zbir-x" data-zbir-close aria-label="Закрити">✕</button>
+    <span class="zbir-badge"><i></i><span data-uk="Хвилинку, перш ніж друкувати" data-en="One moment before you print">Хвилинку, перш ніж друкувати</span></span>
+    <h2 id="zbir-h" data-uk="Чи не забув ти задонатити на наш збір?" data-en="Did you forget to donate to our fundraiser?">Чи не забув ти задонатити на наш збір?</h2>
+    <div class="zbir-grid">
+      <a class="zbir-qr" href="https://send.monobank.ua/jar/7Ta3ecK8Am" target="_blank" rel="noopener" data-zbir-go="qr"><img src="../img/zbir-qr.png" alt="QR-код банки «Збір на захист неба»" width="480" height="480"></a>
+      <div class="zbir-text">
+        <p data-uk="Ця звізда для тебе безкоштовна. А от тиша в небі над нашими містами — ні. Її щоночі виборюють хлопці з груп перехоплювачів 1030-го полку «Аквіла»." data-en="This star is free for you. The quiet sky over our cities is not. Every night it is won by the interceptor teams of the 1030th “Aquila” Regiment.">Ця звізда для тебе безкоштовна. А от тиша в небі над нашими містами — ні. Її щоночі виборюють хлопці з груп перехоплювачів 1030-го полку «Аквіла».</p>
+        <p data-uk="Разом із FRAME та БФ «Сотники» ми збираємо на два авто Puma, які стануть їхніми мобільними пунктами управління. Поки друкується викрійка — закинь на банку хоча б 100 ₴. Нехай твоя зірка світить не лише на Різдво." data-en="Together with FRAME and the Sotnyky Foundation we are raising funds for two Puma vehicles that will become their mobile command posts. While your pattern prints, drop at least 100 ₴ into the jar. Let your star shine not only at Christmas.">Разом із FRAME та БФ «Сотники» ми збираємо на два авто Puma, які стануть їхніми мобільними пунктами управління. Поки друкується викрійка — закинь на банку хоча б 100 ₴. Нехай твоя зірка світить не лише на Різдво.</p>
+        <div class="zbir-goal"><span data-uk="Ціль: 550 000 ₴" data-en="Goal: 550,000 ₴">Ціль: 550 000 ₴</span><a href="https://send.monobank.ua/jar/7Ta3ecK8Am" target="_blank" rel="noopener" data-zbir-go="link">send.monobank.ua/jar/7Ta3ecK8Am</a></div>
+        <p class="zbir-small" data-uk="Збір «На захист неба» · Полтавська Хода звіздарів · FRAME · БФ «Сотники»" data-en="“Protect the Sky” fundraiser · Poltava Star Procession · FRAME · Sotnyky Foundation">Збір «На захист неба» · Полтавська Хода звіздарів · FRAME · БФ «Сотники»</p>
+      </div>
+    </div>
+    <div class="zbir-actions">
+      <a class="zbir-donate" href="https://send.monobank.ua/jar/7Ta3ecK8Am" target="_blank" rel="noopener" data-zbir-go="button"><span data-uk="💛 Задонатити на банку ↗" data-en="💛 Donate to the jar ↗">💛 Задонатити на банку ↗</span></a>
+      <button type="button" class="zbir-dl" data-zbir-dl><span data-uk="Завантажити викрійку" data-en="Download the pattern">Завантажити викрійку</span> ↓</button>
+    </div>
+  </div>
+</div>
+<script>
+/* Вікно збору: з'являється перед кожним завантаженням викрійки. «Завантажити викрійку» продовжує звичайне завантаження. */
+(function(){
+  const SEL = '#dl, #dl2';
+  const m = document.getElementById('zbir-modal');
+  let pending = null, pass = false;
+  const tk = (p, t) => { try{ typeof track === 'function' && track(p, t); }catch(e){} };
+  const lang = () => { try{ return LANG === 'en' ? 'en' : 'uk'; }catch(e){ return 'uk'; } };
+  function open(btn){
+    pending = btn;
+    const l = lang();
+    m.querySelectorAll('[data-uk]').forEach(el => { el.textContent = el.dataset[l]; });
+    m.querySelector('.zbir-x').setAttribute('aria-label', l === 'en' ? 'Close' : 'Закрити');
+    m.hidden = false; m.classList.add('open'); document.documentElement.style.overflow = 'hidden';
+    m.querySelector('.zbir-donate').focus();
+    tk('donate-modal', 'Збір: вікно перед завантаженням');
+  }
+  function close(){ m.classList.remove('open'); m.hidden = true; document.documentElement.style.overflow = ''; if (pending) pending.focus(); pending = null; }
+  document.addEventListener('click', e => {
+    if (pass) return;
+    const b = e.target.closest(SEL); if (!b || b.disabled) return;
+    e.preventDefault(); e.stopImmediatePropagation(); open(b);
+  }, true);
+  m.addEventListener('click', e => {
+    if (e.target === m || e.target.closest('[data-zbir-close]')) { close(); return; }
+    const go = e.target.closest('[data-zbir-go]'); if (go) { tk('donate-modal-' + go.dataset.zbirGo, 'Збір: перехід з вікна'); return; }
+    if (e.target.closest('[data-zbir-dl]')) {
+      const b = pending; close(); if (!b) return;
+      tk('donate-modal-download', 'Збір: завантаження після вікна');
+      pass = true; try{ b.click(); } finally { pass = false; }
+    }
+  });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && m.classList.contains('open')) close(); });
+})();
+</script>
+
 </html>
